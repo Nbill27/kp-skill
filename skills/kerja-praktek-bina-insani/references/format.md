@@ -67,7 +67,7 @@
 - Put a colon right after terdiri dari, adalah, sebagai berikut, yaitu, bahwa, diantaranya, and seperti. Use only one of them at a time.
 - Attach punctuation to the word it marks with no space before it. Write (data), sebutkan?, and "Judul" with the mark touching the word.
 - Avoid the word daripada when it does not carry its true meaning.
-- Remove the five machine patterns. Drop cosmic openers such as "Di era digital ini" and "Seiring perkembangan teknologi". Restore a missing subject when the sentence hides who acts. Replace English-style connectors copied literally into Indonesian. Break the ritual of starting paragraphs with "Hal ini" or "Dengan demikian". Cut inflated claims that the evidence does not support, for example calling a small prototype "revolusioner".
+- Remove the machine patterns listed in humanizer.md. Drop cosmic openers such as "Di era digital ini" and "Seiring perkembangan teknologi". Restore a missing subject when the sentence hides who acts. Replace English-style connectors copied literally into Indonesian. Break the ritual of starting paragraphs with "Hal ini" or "Dengan demikian". Cut inflated claims that the evidence does not support, for example calling a small prototype "revolusioner".
 - Do not over-correct. Keep passive voice in the method description, keep "penelitian ini" as a subject, keep foreign terms in italics where the guide asks for it, and keep standard academic phrasing the guide itself uses. Fix only what breaks a rule or blocks understanding.
 
 ## Abbreviations and repeated words

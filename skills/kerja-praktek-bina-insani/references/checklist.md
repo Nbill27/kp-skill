@@ -11,12 +11,12 @@
 - Check that the related research comes from ISSN journals within the last 5 years.
 - Check that the literature review uses sources from the last 5 years.
 - Check that 10 journal papers and 8 books or ebooks stand ready for the sidang.
-- Check that no number in the text lacks a source and that every [ISI: ...] and [CEK: ...] marker is resolved.
+- Check that no number in the text lacks a source and that every [ISI: ...], [CEK: ...], [BUKTI: ...], and [KONFIRMASI PEMBIMBING: ...] marker is resolved.
 
 ## Layer 2, language
 
 - Check the language follows EYD and KBBI and the guide language rules.
-- Check that the five machine patterns are removed and that nothing was over-corrected.
+- Check that the patterns listed in references/humanizer.md are removed and that nothing was over-corrected.
 - Check that the editing scope used matches what the user asked for, Koreksi, Sunting, Tulis ulang, or Tulis.
 
 ## Layer 3, format
