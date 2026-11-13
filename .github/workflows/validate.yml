@@ -1,0 +1,116 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: package (${{ matrix.python }} on ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python: ["3.9", "3.11", "3.13"]
+        include:
+          - os: macos-latest
+            python: "3.12"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Compile the scripts
+        run: python -m py_compile scripts/validate_package.py scripts/check_docx.py
+
+      - name: Validate the package
+        run: python scripts/validate_package.py
+
+      - name: Validate the package as JSON
+        run: python scripts/validate_package.py --json
+
+      - name: Check the shell installer parses
+        if: runner.os != 'Windows'
+        run: sh -n install.sh
+
+      - name: Smoke-test the shell installer
+        if: runner.os != 'Windows'
+        run: |
+          home="$(mktemp -d)"
+          HOME="$home" sh ./install.sh --all --dry-run
+          HOME="$home" sh ./install.sh --all
+          test -f "$home/.claude/skills/kerja-praktek-bina-insani/SKILL.md"
+          test -f "$home/.hermes/skills/kerja-praktek-bina-insani/SKILL.md"
+          test -f "$home/.codebuddy/skills/kerja-praktek-bina-insani/SKILL.md"
+          HOME="$home" sh ./install.sh --all
+          HOME="$home" sh ./install.sh --all --uninstall
+          test ! -e "$home/.claude/skills/kerja-praktek-bina-insani"
+
+      - name: Reject an unknown flag
+        if: runner.os != 'Windows'
+        run: |
+          if sh ./install.sh --nonsense; then
+            echo "install.sh accepted an unknown flag"
+            exit 1
+          fi
+
+  windows:
+    name: installer (windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate the package
+        run: python scripts/validate_package.py
+
+      - name: Parse the PowerShell installer
+        shell: pwsh
+        run: |
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path ./install.ps1), [ref]$null, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Error $_ }
+            exit 1
+          }
+
+      - name: Smoke-test the PowerShell installer
+        shell: pwsh
+        run: |
+          $fake = Join-Path $env:RUNNER_TEMP "home"
+          New-Item -ItemType Directory -Force -Path $fake | Out-Null
+          $env:USERPROFILE = $fake
+          $env:XDG_CONFIG_HOME = ""
+          ./install.ps1 -All -DryRun
+          ./install.ps1 -All
+          $target = Join-Path $fake ".claude\skills\kerja-praktek-bina-insani\SKILL.md"
+          if (-not (Test-Path $target)) { throw "Claude install missing" }
+          ./install.ps1 -All
+          ./install.ps1 -All -Uninstall
+          if (Test-Path (Join-Path $fake ".claude\skills\kerja-praktek-bina-insani")) {
+            throw "Uninstall left the skill behind"
+          }
+
+      - name: Reject two targets
+        shell: pwsh
+        run: |
+          $env:USERPROFILE = Join-Path $env:RUNNER_TEMP "home2"
+          New-Item -ItemType Directory -Force -Path $env:USERPROFILE | Out-Null
+          try {
+            ./install.ps1 -Claude -Codex
+            throw "install.ps1 accepted two targets"
+          } catch {
+            if ($_.Exception.Message -like "*accepted two targets*") { throw }
+          }

@@ -1,0 +1,61 @@
+name: Bug report
+description: Something the skill said or did was wrong.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A behaviour bug needs a reproducible prompt. Without the exact text you
+        sent and the answer you got, it is hard to fix and easy to argue about.
+  - type: input
+    id: version
+    attributes:
+      label: Skill version
+      description: The `Version X.Y.Z` line in `SKILL.md`, or the release tag.
+      placeholder: "2.2.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Agent
+      options:
+        - Claude Code
+        - OpenCode
+        - Codex
+        - Hermes
+        - CodeBuddy
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: prompt
+    attributes:
+      label: Prompt you sent
+      description: Verbatim, including typos. Strip anything private first.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: got
+    attributes:
+      label: What you got
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+      description: If the skill cites a rule, name the reference file that owns it.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else
+      description: Study program, chapter, or attachment involved. No real names, NPM, or company data.
+    validations:
+      required: false

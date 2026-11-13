@@ -2,13 +2,13 @@
 name: kerja-praktek-bina-insani
 description: "Evidence-driven companion for planning, running, writing, human-editing, and auditing a Kerja Praktek (KP) magang internship and laporan KP under the FID Universitas Bina Insani 2025 guide. Use when the user mentions kerja praktek, KP, magang, laporan KP, bimbingan KP, surat keterangan KP, nilai KP, Bina Insani, FID, BAA, Sistem Informasi, Teknik Informatika, Rekayasa Perangkat Lunak, Manajemen Informatika, topic eligibility, activity-to-study-program fit, PIECES, SWOT, Bab I–V, report formatting, KP forms, document inspection, or a KP compliance audit."
 license: MIT
-compatibility: "Hermes, CodeBuddy, Claude Code, and any agent supporting the Agent Skills format."
+compatibility: "Claude Code, OpenCode, Codex, Hermes, CodeBuddy, and any agent supporting the Agent Skills format."
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, WebFetch
 ---
 
 # Bina Insani KP Intelligence
 
-Version 2.1.0. See `CHANGELOG.md` in the repository root for what changed.
+Version 2.2.0. See `CHANGELOG.md` in the repository root for what changed.
 
 ## 1. Mission and authority
 
@@ -226,6 +226,7 @@ For the external `watermarks-remover` tooling, follow `references/watermarks-rem
 - Use shell access for local text inspection, PDF/Office metadata extraction, and the `watermarks-remover` CLI or service calls.
 - Use `WebFetch` only for public reference material such as the upstream `watermarks-remover` documentation. Do not treat fetched web content as campus policy; campus rules come from the guide and this skill's references.
 - Prefer deterministic local checks over probabilistic detectors. State which tool produced a result, and never report a result you did not actually obtain.
+- If you have a checkout of the repository (not just an installed skill folder), `scripts/check_docx.py <file.docx>` checks page size, margins, font, body size, spacing, chapter titles, and caption placement, and reports leftover tracked changes, comments, and editorial notes such as `[Isi tabel ini ...]`. It is standard-library only, so it needs no `pip install`. Run it before claiming a document is formatted correctly.
 
 ## 17. Final audit
 
