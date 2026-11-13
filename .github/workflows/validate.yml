@@ -16,11 +16,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        python: ["3.9", "3.11", "3.13"]
+        # ubuntu-latest moved to 26.04, which has no setup-python builds below
+        # 3.14, so pin the runner instead of the newest image.
+        os: [ubuntu-24.04]
+        python: ["3.10", "3.12", "3.13"]
         include:
           - os: macos-latest
-            python: "3.12"
+            python: "3.13"
     steps:
       - uses: actions/checkout@v4
 
