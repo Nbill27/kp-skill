@@ -8,7 +8,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, WebFetch
 
 # Bina Insani KP Intelligence
 
-Version 2.2.0. See `CHANGELOG.md` in the repository root for what changed.
+Version 2.2.1. See `CHANGELOG.md` in the repository root for what changed.
 
 ## 1. Mission and authority
 
@@ -227,6 +227,7 @@ For the external `watermarks-remover` tooling, follow `references/watermarks-rem
 - Use `WebFetch` only for public reference material such as the upstream `watermarks-remover` documentation. Do not treat fetched web content as campus policy; campus rules come from the guide and this skill's references.
 - Prefer deterministic local checks over probabilistic detectors. State which tool produced a result, and never report a result you did not actually obtain.
 - If you have a checkout of the repository (not just an installed skill folder), `scripts/check_docx.py <file.docx>` checks page size, margins, font, body size, spacing, chapter titles, and caption placement, and reports leftover tracked changes, comments, and editorial notes such as `[Isi tabel ini ...]`. It is standard-library only, so it needs no `pip install`. Run it before claiming a document is formatted correctly.
+- The installed skill folder ships its own updater at `scripts/kp-skill.py` (standard library only). From the installed skill folder, `python scripts/kp-skill.py version` shows the installed version, `check-update` compares it with the latest GitHub Release without changing files, `update` downloads that release, validates it, backs the current installation up outside the skill folder, and replaces it, and `rollback` restores the latest backup. There is no automatic update. A v2.2.0 installation does not have the updater yet: install v2.2.1 once with the installer first, then use the updater for later versions.
 
 ## 17. Final audit
 

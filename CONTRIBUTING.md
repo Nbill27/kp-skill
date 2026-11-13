@@ -45,6 +45,7 @@ Standard library only, no install step:
 python scripts/validate_package.py
 python scripts/validate_package.py --json
 python scripts/validate_package.py --quiet
+python -m unittest discover -s tests -p "test_kp_skill_updater.py" -v
 ```
 
 Exit code 0 means no errors. Warnings do not fail the build but should be

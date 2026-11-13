@@ -24,6 +24,7 @@ The rules in this skill come from the official guide: *Buku Panduan Kerja Prakte
 | `references/humanizer.md` | Academic Indonesian humanizer: diagnostic categories, editing procedure, guardrails |
 | `references/document-inspection.md` | Hidden Unicode, metadata, and provenance inspection policy |
 | `references/watermarks-remover.md` | Optional [watermarks-remover](https://github.com/guillaumemeyer/watermarks-remover) integration |
+| `scripts/kp-skill.py` | Updater for the installed skill: version, check-update, update, rollback |
 
 Everything the skill needs lives inside the skill folder, so a plain copy of the folder is a complete install. The `watermarks-remover` integration is optional and requires installing that tool separately; see `references/watermarks-remover.md`.
 
@@ -134,6 +135,21 @@ On Windows, use `.\install.ps1 -All` instead. Replace `--all` with one agent fla
 The installer removes the destination folder before copying, so a reinstall cannot leave behind a file that no longer ships in the new version. A plain `cp -r` does not do this: it merges into the old folder and leaves stale files in place, so use the installer for updates.
 
 If you installed with `gh skill install`, run the same command again to install the latest version. If you installed into a project, copy the updated folder into that project's agent skills directory again and commit the updated copy.
+
+### Updating with the updater
+
+From v2.2.1 on, the installed skill folder ships its own updater at `scripts/kp-skill.py` (standard library only, no Git needed). Run it from the installed skill folder, for example `~/.claude/skills/kerja-praktek-bina-insani/`:
+
+```bash
+python scripts/kp-skill.py version
+python scripts/kp-skill.py check-update
+python scripts/kp-skill.py update
+python scripts/kp-skill.py rollback
+```
+
+`check-update` only compares the installed version with the latest GitHub Release and changes nothing. `update` downloads that release, extracts it safely, runs the package validator from the extracted release, backs the current installation up outside the skill folder, and only then replaces it; if the replacement fails, the backup is restored. `rollback` restores the latest backup. Add `--yes` to skip the confirmation prompt, and `--to 2.3.0` to update to a specific version instead of the latest. There is no automatic update. The updater needs Python 3.10 or newer; it does not need Git or a package manager. SHA-256 is only claimed as a cryptographic check when the release carries a `SHA256SUMS.txt` asset with a matching entry and the hash matches; otherwise the update is validated by safe extraction plus the package validator.
+
+Bootstrap: a v2.2.0 installation has no updater yet, so install v2.2.1 once with the installer above first. After that, the updater handles later versions. Backups are kept in the user cache directory (`~/.cache/kp-skill/backups` on Linux and macOS, `%LOCALAPPDATA%\kp-skill\backups` on Windows), not inside the skill folder.
 
 After reinstalling, start a new agent session. A running session may still use the old copy. Then check the installed version matches the repo:
 

@@ -6,8 +6,8 @@ of the installed skill; it does not ship to users.
 ## What this repo is
 
 A single Agent Skills package at `skills/kerja-praktek-bina-insani/`. The skill
-folder is self-contained: `SKILL.md` plus `references/*.md`. Everything else is
-repository infrastructure.
+folder is self-contained: `SKILL.md` plus `references/*.md`, plus the updater
+at `scripts/kp-skill.py`. Everything else is repository infrastructure.
 
 ## Layout
 
@@ -15,6 +15,7 @@ repository infrastructure.
 | --- | --- |
 | `skills/kerja-praktek-bina-insani/SKILL.md` | Entry point: authority, invariants, routing to references |
 | `skills/kerja-praktek-bina-insani/references/` | One file per topic; each has exactly one owner |
+| `skills/kerja-praktek-bina-insani/scripts/kp-skill.py` | Updater for an installed skill, standard library only |
 | `scripts/validate_package.py` | Structural validator, standard library only |
 | `scripts/check_docx.py` | Deterministic .docx format checker, standard library only |
 | `tests/prompts/` | Behaviour regression corpus, run by hand |
@@ -34,11 +35,17 @@ repository infrastructure.
    `[BUKTI: ...]`, `[KONFIRMASI PEMBIMBING: ...]`.
 5. Never write a fabricated example that could be mistaken for real student or
    company data.
+6. The updater (`skills/kerja-praktek-bina-insani/scripts/kp-skill.py`) is
+   standard library only, like the validator and the checker. It must not
+   assume Git, a package manager, or a checksum published by GitHub: validate
+   an extracted release with `validate_package.py` and check its version
+   against its tag instead. Keep backups outside the skill folder.
 
 ## Verification before you claim done
 
 ```bash
 python scripts/validate_package.py
+python -m unittest discover -s tests -p "test_kp_skill_updater.py" -v
 ```
 
 Must exit 0. If you touched an installer, also check:

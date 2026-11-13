@@ -2,6 +2,27 @@
 
 All notable changes to this repository. Versions refer to the `kerja-praktek-bina-insani` skill.
 
+## 2.2.1 — 2026-11-13
+
+Adds the skill updater. This is repository tooling; it does not change campus requirements, report rules, or the MarkItDown plan, which stays a separate release.
+
+### Added
+
+- `skills/kerja-praktek-bina-insani/scripts/kp-skill.py` — standard-library-only updater that ships inside the installed skill folder: `version`, `check-update` (read-only, compares the installed version with the latest GitHub Release), `update` (downloads the release zipball, extracts it safely, runs `scripts/validate_package.py` from the extracted release, backs the current installation up outside the skill folder, then replaces it, restoring the backup if the replacement fails), and `rollback` (restores the latest backup). It re-executes itself from a temporary copy so it can replace its own folder, and it refuses a release whose `SKILL.md` version does not match its tag or that lacks the updater itself. No automatic update, no Git, no extra dependency. SHA-256 is verified only when the release carries a `SHA256SUMS.txt` asset with an entry for the downloaded archive and the hash matches; otherwise integrity is established by safe extraction plus the validator, and the updater says so instead of claiming a checksum check.
+- `tests/test_kp_skill_updater.py` — thirteen unit tests with mocked network and local release zips: version parsing, safe extraction (rejects `..`, absolute paths), SHA-256 verification against a `SHA256SUMS.txt` asset (match, mismatch, and no asset), check-update reporting, update then rollback, refusing an older release, and refusing a version mismatch. No network needed.
+- `README.md` documents the updater in the Updating section and in the skill contents table.
+
+### Changed
+
+- `SKILL.md` version is 2.2.1 and section 16 documents the updater and its bootstrap: a v2.2.0 installation has no updater yet, so v2.2.1 must be installed once with the installer before the updater can be used.
+- `AGENTS.md` and `CONTRIBUTING.md` record the updater layout and its test command.
+- The installer smoke test in CI will check that the updater ships in the installed copy once the workflow change is applied manually: the GitHub App used for API pushes has no `workflows` permission, so the `.github/workflows/validate.yml` change in this release is deferred and must be applied through the GitHub web UI, not by the updater or the API. The updater itself and its tests are already in the repo and pass locally.
+
+### Preserved
+
+- `scripts/check_docx.py` and `scripts/validate_package.py` stay at the repository root and remain standard-library-only; only `kp-skill.py` lives inside the skill folder.
+- The campus rules, the placeholder contract, the ghostwriting boundary, and the inspect-first policy are the same as 2.2.0.
+
 ## 2.2.0 — 2026-11-13
 
 Turns the repository from "a folder you copy" into a package that checks itself. No campus rule changed: every edit below is infrastructure, documentation, or a defect fix.
