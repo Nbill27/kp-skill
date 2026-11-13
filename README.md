@@ -117,6 +117,32 @@ gh skill install Nbill27/kp-skill kerja-praktek-bina-insani --agent claude --sco
 
 Replace `claude` with `opencode`, `codex`, or the agent you use, and use `--scope project` to commit the skill with the repository instead. Add `--pin v2.2.0` to install the tagged release instead of the current default branch.
 
+## Updating
+
+There is no auto-update. Installing copies the skill folder into the agent's skills directory, so the agent reads that copy, not this repository. Pulling the latest repo alone does not change an installed copy.
+
+To update an installed skill:
+
+```bash
+cd kp-skill
+git pull
+./install.sh --all
+```
+
+On Windows, use `.\install.ps1 -All` instead. Replace `--all` with one agent flag (for example `--claude`) to update only that agent.
+
+The installer removes the destination folder before copying, so a reinstall cannot leave behind a file that no longer ships in the new version. A plain `cp -r` does not do this: it merges into the old folder and leaves stale files in place, so use the installer for updates.
+
+If you installed with `gh skill install`, run the same command again to install the latest version. If you installed into a project, copy the updated folder into that project's agent skills directory again and commit the updated copy.
+
+After reinstalling, start a new agent session. A running session may still use the old copy. Then check the installed version matches the repo:
+
+```bash
+grep "^Version" ~/.claude/skills/kerja-praktek-bina-insani/SKILL.md
+```
+
+Compare it with the newest entry in [CHANGELOG.md](CHANGELOG.md). There is no update notification: check the changelog or the release tags on GitHub when you want to know if a new version exists.
+
 ## Use
 
 Ask the agent to write or check a laporan KP. The skill loads when the request matches: kerja praktek, KP, magang, laporan KP, bimbingan KP, surat keterangan KP, nilai KP, Bina Insani, FID, BAA, a study program name, or a chapter name such as Bab I through Bab V.
