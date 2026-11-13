@@ -121,6 +121,31 @@ Replace `claude` with `opencode`, `codex`, or the agent you use, and use `--scop
 
 Ask the agent to write or check a laporan KP. The skill loads when the request matches: kerja praktek, KP, magang, laporan KP, bimbingan KP, surat keterangan KP, nilai KP, Bina Insani, FID, BAA, a study program name, or a chapter name such as Bab I through Bab V.
 
+There is no separate command file in this repo. The skill is invoked by what you type, and the slash or symbol form is provided by the agent itself, not by a file here.
+
+```mermaid
+flowchart TD
+    A[Install the skill] --> B[Ask the agent for KP help]
+    B --> C{How did you ask?}
+    C -->|Trigger words| D["kerja praktek, magang, laporan KP, Bina Insani, FID, Bab I-V"]
+    C -->|Name the skill| E["pakai skill kerja-praktek-bina-insani ..."]
+    C -->|Slash or symbol| F["Claude Code: /kerja-praktek-bina-insani<br/>Codex: $kerja-praktek-bina-insani<br/>OpenCode: @kerja-praktek-bina-insani"]
+    D --> G[Skill loads]
+    E --> G
+    F --> G
+    G --> H[Agent reads SKILL.md, then the matching reference]
+    H --> I[Plan, outline, draft, review, or audit]
+    I --> J["Result, with ISI / CEK / BUKTI markers when data is missing"]
+```
+
+Three ways to call it:
+
+1. **Trigger words, just talk normally.** `tolong buatin outline laporan KP RPL` or `cek Bab I gue, udah sesuai panduan belum?` The agent sees a trigger word in the skill description and loads the skill on its own.
+2. **Name the skill explicitly.** `pakai skill kerja-praktek-bina-insani, audit laporan KP gue` Use this when the request could match another skill, or when you want to be sure this one is used.
+3. **Slash or symbol, per agent.** Claude Code: `/kerja-praktek-bina-insani`. Codex: `$kerja-praktek-bina-insani`. OpenCode: `@kerja-praktek-bina-insani`. Hermes and CodeBuddy: use way 1 or 2, then confirm with `hermes skills list` or the CodeBuddy skills list that the skill is installed.
+
+After the skill loads, the agent reads `SKILL.md` first, then only the reference that fits the task (for example `references/outlines.md` for an outline, `references/format.md` for a format check), and works chapter by chapter. Missing data is never invented: it is marked `[ISI: ...]`, `[CEK: ...]`, `[BUKTI: ...]`, or `[KONFIRMASI PEMBIMBING: ...]`.
+
 ## Check your report
 
 Two scripts ship with the repository. Both use the Python standard library only, so there is nothing to install.

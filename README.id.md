@@ -100,6 +100,31 @@ Ganti `claude` sesuai agent Anda, dan pakai `--scope project` bila skill ingin i
 
 Minta agent menulis atau memeriksa laporan KP. Skill aktif saat permintaan cocok: kerja praktek, KP, magang, laporan KP, bimbingan KP, surat keterangan KP, nilai KP, Bina Insani, FID, BAA, nama program studi, atau nama bab seperti Bab I sampai Bab V.
 
+Repo ini tidak punya berkas command terpisah. Skill dipanggil dari apa yang Anda ketik, dan bentuk slash atau simbol disediakan oleh agent-nya sendiri, bukan oleh berkas di repo ini.
+
+```mermaid
+flowchart TD
+    A[Pasang skill] --> B[Minta bantuan KP ke agent]
+    B --> C{Bagaimana Anda memintanya?}
+    C -->|Kata pemicu| D["kerja praktek, magang, laporan KP, Bina Insani, FID, Bab I-V"]
+    C -->|Sebut nama skill| E["pakai skill kerja-praktek-bina-insani ..."]
+    C -->|Slash atau simbol| F["Claude Code: /kerja-praktek-bina-insani<br/>Codex: $kerja-praktek-bina-insani<br/>OpenCode: @kerja-praktek-bina-insani"]
+    D --> G[Skill aktif]
+    E --> G
+    F --> G
+    G --> H[Agent membaca SKILL.md, lalu referensi yang cocok]
+    H --> I[Rencana, kerangka, draf, telaah, atau audit]
+    I --> J["Hasil, dengan penanda ISI / CEK / BUKTI bila data belum ada"]
+```
+
+Tiga cara memanggilnya:
+
+1. **Kata pemicu, bicara biasa saja.** `tolong buatin outline laporan KP RPL` atau `cek Bab I gue, udah sesuai panduan belum?` Agent melihat kata pemicu di deskripsi skill lalu memuat skill itu sendiri.
+2. **Sebut nama skill secara eksplisit.** `pakai skill kerja-praktek-bina-insani, audit laporan KP gue` Pakai cara ini bila permintaan bisa cocok dengan skill lain, atau bila Anda ingin memastikan skill ini yang dipakai.
+3. **Slash atau simbol, tergantung agent.** Claude Code: `/kerja-praktek-bina-insani`. Codex: `$kerja-praktek-bina-insani`. OpenCode: `@kerja-praktek-bina-insani`. Hermes dan CodeBuddy: pakai cara 1 atau 2, lalu pastikan skill sudah terpasang lewat `hermes skills list` atau daftar skill CodeBuddy.
+
+Setelah skill aktif, agent membaca `SKILL.md` dulu, lalu hanya referensi yang cocok dengan tugas (misalnya `references/outlines.md` untuk kerangka, `references/format.md` untuk cek format), dan bekerja bab demi bab. Data yang belum ada tidak pernah dikarang: ditandai `[ISI: ...]`, `[CEK: ...]`, `[BUKTI: ...]`, atau `[KONFIRMASI PEMBIMBING: ...]`.
+
 ## Memeriksa laporan
 
 Dua skrip disertakan. Keduanya hanya memakai pustaka standar Python, jadi tidak ada yang perlu dipasang.
