@@ -27,6 +27,7 @@ Adds the academic humanizer and the optional `watermarks-remover` integration, a
 
 - `allowed-tools` gains `WebFetch` for reading public upstream documentation; `SKILL.md` states that fetched web content is not campus policy.
 - `README.md` lists every file inside the skill and states that the folder is a complete install.
+- `README.md` install instructions now cover Claude Code (`~/.claude/skills`), OpenCode (`~/.config/opencode/skills`), Codex (`~/.agents/skills`), Hermes, and CodeBuddy, with user and project scope for each. `install.sh` gained `--claude`, `--opencode`, `--codex`, and `--help`, so no documented flag is missing from the script.
 
 ### Preserved
 

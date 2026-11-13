@@ -29,32 +29,90 @@ Everything the skill needs lives inside the skill folder, so a plain copy of the
 
 ## Install
 
+A skill is a folder with `SKILL.md` at its root, so installing means copying `skills/kerja-praktek-bina-insani/` into a directory your agent scans. Keep the folder name: the frontmatter `name` matches it.
+
+| Agent | User scope | Project scope |
+| --- | --- | --- |
+| Claude Code | `~/.claude/skills/` | `.claude/skills/` |
+| OpenCode | `~/.config/opencode/skills/` | `.opencode/skills/` |
+| Codex | `~/.agents/skills/` | `.agents/skills/` |
+| Hermes | `~/.hermes/skills/` | — |
+| CodeBuddy | `~/.codebuddy/skills/` | `.codebuddy/skills/` |
+
+User scope makes the skill available in every project; project scope commits it with the repository so the whole team gets it. Pick either, or both.
+
+### Claude Code
+
+```bash
+git clone https://github.com/Nbill27/kp-skill.git
+mkdir -p ~/.claude/skills
+cp -r kp-skill/skills/kerja-praktek-bina-insani ~/.claude/skills/
+```
+
+Project scope instead of user scope: copy the same folder into `.claude/skills/` inside the repository.
+
+Check it: start `claude`, run `/skills`, and confirm `kerja-praktek-bina-insani` is listed.
+
+### OpenCode
+
+```bash
+git clone https://github.com/Nbill27/kp-skill.git
+mkdir -p ~/.config/opencode/skills
+cp -r kp-skill/skills/kerja-praktek-bina-insani ~/.config/opencode/skills/
+```
+
+Project scope instead of user scope: copy the same folder into `.opencode/skills/` inside the repository.
+
+Check it: the skill is advertised under the ID `kerja-praktek-bina-insani`, and loads when you mention `@kerja-praktek-bina-insani`. OpenCode also scans `~/.claude/skills` and `~/.agents/skills`, so an install for Claude Code or Codex is picked up without a second copy.
+
+### Codex
+
+```bash
+git clone https://github.com/Nbill27/kp-skill.git
+mkdir -p ~/.agents/skills
+cp -r kp-skill/skills/kerja-praktek-bina-insani ~/.agents/skills/
+```
+
+Project scope instead of user scope: copy the same folder into `.agents/skills/` inside the repository. Codex scans that directory from the working directory up to the repository root.
+
+Check it: run `/skills` in the Codex CLI, or invoke the skill directly with `$kerja-praktek-bina-insani`.
+
 ### Hermes
 
 ```bash
 git clone https://github.com/Nbill27/kp-skill.git
-cp -r kp-skill/skills/* ~/.hermes/skills/
+mkdir -p ~/.hermes/skills
+cp -r kp-skill/skills/kerja-praktek-bina-insani ~/.hermes/skills/
 hermes skills list
-```
-
-Or run the installer from the repo root:
-
-```bash
-./install.sh
 ```
 
 ### CodeBuddy
 
 ```bash
 git clone https://github.com/Nbill27/kp-skill.git
-cp -r kp-skill/skills/* ~/.codebuddy/skills/
+mkdir -p ~/.codebuddy/skills
+cp -r kp-skill/skills/kerja-praktek-bina-insani ~/.codebuddy/skills/
 ```
 
-Project scope instead of user scope: copy into `.codebuddy/skills/` inside the project.
+Project scope instead of user scope: copy the same folder into `.codebuddy/skills/` inside the repository.
+
+### Installer script
+
+`install.sh` performs the same copy for one agent at a time:
+
+```bash
+./install.sh --claude
+./install.sh --opencode
+./install.sh --codex
+./install.sh --hermes
+./install.sh --codebuddy
+```
+
+With no flag it installs into Hermes. `./install.sh --help` prints the targets.
 
 ### Other agents
 
-Copy a skill folder into the agent skills directory, keeping the folder name. The `name` in the frontmatter matches the directory name, as the spec requires. `gh skill install` also works:
+Copy the skill folder into the agent skills directory, keeping the folder name. The `name` in the frontmatter matches the directory name, as the spec requires. `gh skill install` also works:
 
 ```bash
 gh skill install Nbill27/kp-skill --all
